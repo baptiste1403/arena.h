@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# dependances
+deps/
+
+# IDE
+compile_commands.json
