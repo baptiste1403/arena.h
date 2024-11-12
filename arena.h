@@ -29,7 +29,6 @@
 #define ARENA_H
 
 #include <stdlib.h>
-#include <assert.h>
 
 #define DEFAULT_ALLOC_SIZE 2048
 
