@@ -29,6 +29,7 @@
 #define ARENA_H
 
 #include <stdlib.h>
+#include <string.h>
 
 #define DEFAULT_ALLOC_SIZE 2048
 
@@ -49,6 +50,21 @@ void* arena_malloc(arena_t* ctx, size_t size);
 void* arena_calloc(arena_t* ctx, size_t nmemb, size_t size);
 void* arena_realloc(arena_t* ctx, void* ptr, size_t oldsize, size_t size);
 char* arena_strdup(arena_t* ctx, const char* s);
+
+#define DA_INIT_CAPACITY 10
+#define arena_da_append(ctx, array, item) do { \
+    if((array)->count >= (array)->capacity) { \
+        if((array)->capacity == 0) { \
+            (array)->items = arena_malloc((ctx), DA_INIT_CAPACITY*sizeof((array)->items[0])); \
+            (array)->capacity = DA_INIT_CAPACITY; \
+        } else {\
+            (array)->items = arena_realloc((ctx), (array)->items, (array)->capacity*sizeof((array)->items[0]), (array)->capacity*2*sizeof((array)->items[0])); \
+            (array)->capacity *= 2; \
+        } \
+    } \
+    (array)->items[(array)->count] = (item); \
+    (array)->count++; \
+} while(0) \
 
 #ifdef ARENA_IMPLEMENTATION
 

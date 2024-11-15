@@ -118,7 +118,7 @@ void register_after_test(file_t* file, void (*func)()) {
     file->after_func = func;
 }
 
-char* basename(const char* file) {
+char* filename(const char* file) {
     char* start = strrchr(file, '/');
     char* test_name;
     if(start == NULL) {
@@ -126,6 +126,11 @@ char* basename(const char* file) {
     } else {
         test_name = arena_strdup(&cutest_arena, start+1);
     }
+    return test_name;
+}
+
+char* basename(const char* file) {
+    char* test_name = filename(file);
     *strrchr(test_name, '.') = '\0';
     return test_name;
 }
@@ -143,7 +148,7 @@ void run_all_tests() {
                 global_failed = true;
                 printf("    \033[0;31m%s : KO\033[0m\n", files[j].registry[i].func_name);
                 for (assert_result_t* current = assert_result_list; current != NULL; current = current->next) {
-                    printf("    \033[0;31m    %s at %s:%lu\033[0m\n", current->buffer, strrchr(files[j].name, '/')+1, current->line);
+                    printf("    \033[0;31m    %s at %s:%lu\033[0m\n", current->buffer, filename(files[j].name), current->line);
                 }
             }
             current_assert_result = NULL;
